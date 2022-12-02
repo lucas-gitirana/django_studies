@@ -1,26 +1,37 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
+
+monthly_challenges = {
+    "january":"Eat no meat for the entire month!",
+    "february": "Walk at least 20 minutes every day!",
+    "march": "Learn Django for at least 20 minutes every day!",
+    "april":"Walk at least 20 minutes every day!",
+    "may":"Walk at least 20 minutes every day!",
+    "june":"Learn Django for at least 20 minutes every day!",
+    "july":"Eat no meat for the entire month!",
+    "august":"Eat no meat for the entire month!",
+    "september":"Eat no meat for the entire month!",
+    "october":"Learn Django for at least 20 minutes every day!",
+    "november":"Walk at least 20 minutes every day!",
+    "december": "Learn Django for at least 20 minutes every day!"
+}
 
 # Create your views here.
 
+def monthly_challenge_by_number(request, month):
+    months = list(monthly_challenges.keys())
 
-def january(request):
-    return HttpResponse("Eat no meat for the entire month!")
-
-
-def february(request):
-    return HttpResponse("Walk at least 20 minutes every day!")
-
+    if month > len(months):
+        return HttpResponseNotFound("Invalid month!")
+    else:
+        month_forwarded = months[month - 1]
+        return HttpResponseRedirect("/challenges/" + month_forwarded)        
 
 def monthly_challenge(request, month):
-    challenge_text = None
-    if month == "january":
-        challenge_text = "Eat no meat for the entire month!"
-    elif month == "february":
-        challenge_text = "Walk at least 20 minutes every day!"
-    elif month == "march":
-        challenge_text = "Learn Django for at least 20 minutes every day!"
-    else:
-        return HttpResponseNotFound("This month is not supported!")
+    try:
+        challenge_text = monthly_challenges[month]
+        return HttpResponse(challenge_text)
+    except:
+        return HttpResponseNotFound("This month is not supported!") 
 
-    return HttpResponse(challenge_text)
+    
